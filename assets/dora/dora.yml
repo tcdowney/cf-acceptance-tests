@@ -1,0 +1,10 @@
+applications:
+- name: dora
+  disk_quota: 1G
+  env:
+    foo: bar
+  instances: 5
+  memory: 256M
+  routes:
+  - route: dora.cyber-master.capi.land
+  stack: cflinuxfs2

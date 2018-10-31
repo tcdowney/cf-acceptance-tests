@@ -2,6 +2,11 @@ source "http://rubygems.org"
 
 gem "sinatra"
 gem "json"
+gem 'sqlite3'
+gem 'sequel', '~> 5.0'
+gem 'talentbox-delayed_job_sequel', '~> 4.3.0'
+gem 'rake'
+gem 'pry'
 
 group :test, :development do
   gem "rspec"

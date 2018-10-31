@@ -1,0 +1,33 @@
+---
+applications:
+- name: dora
+  env:
+    foo: bar
+  stack: cflinuxfs2
+  routes:
+  - route: dora.cyber-master.capi.land
+  processes:
+  - type: console
+    instances: 0
+    memory: 256M
+    disk_quota: 1024M
+    health-check-type: process
+  - type: rake
+    instances: 0
+    memory: 256M
+    disk_quota: 1024M
+    health-check-type: process
+  - type: web
+    instances: 30
+    memory: 256M
+    disk_quota: 1024M
+    health-check-type: port
+  - type: worker
+    instances: 0
+    memory: 256M
+    disk_quota: 1024M
+    health-check-type: process
+  - type: web-deployment-lolo
+    instances: 1
+
+

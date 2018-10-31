@@ -3,6 +3,11 @@ ENV['RACK_ENV'] ||= 'development'
 require 'rubygems'
 require 'sinatra/base'
 require 'json'
+require 'sequel'
+require 'delayed_job'
+require 'delayed_job_sequel'
+
+require './performer'
 
 ID = ((ENV["VCAP_APPLICATION"] && JSON.parse(ENV["VCAP_APPLICATION"])["instance_id"]) || SecureRandom.uuid).freeze
 
@@ -17,6 +22,9 @@ $stdout.sync = true
 $stderr.sync = true
 $counter = 0
 
+Sequel.connect('sqlite://db/development.sqlite3')
+::Delayed::Worker.backend = :sequel
+
 class Dora < Sinatra::Base
   use Instances
   use StressTesters
@@ -24,7 +32,12 @@ class Dora < Sinatra::Base
   use Curl
 
   get '/' do
-    "Hi, I'm Dora!"
+    "Hi, I'm Dora 2!"
+  end
+
+  get '/makedj' do
+    job = ::Delayed::Job.enqueue(Performer.new)
+    [201, job.to_json]
   end
 
   get '/health' do

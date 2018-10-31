@@ -1,0 +1,24 @@
+require 'sequel'
+require 'delayed_job'
+require 'delayed_job_sequel'
+
+require './performer'
+
+MIGRATIONS_DIR = File.expand_path('db', File.dirname(__FILE__))
+SEQUEL_MIGRATIONS = File.join(MIGRATIONS_DIR, 'migrations')
+
+desc 'Perform Sequel migration to database'
+task :migrate do
+  db = Sequel.connect('sqlite://db/development.sqlite3')
+  Sequel.extension :migration
+  Sequel::Migrator.run(db, SEQUEL_MIGRATIONS, {})
+end
+
+desc 'Start Delayed Job worker'
+task :worker do
+  Sequel.connect('sqlite://db/development.sqlite3')
+  ::Delayed::Worker.backend = :sequel
+
+  worker = Delayed::Worker.new(quiet: false)
+  worker.start
+end
